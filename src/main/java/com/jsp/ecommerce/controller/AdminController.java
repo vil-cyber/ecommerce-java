@@ -18,7 +18,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-	
+
 	@Autowired
 	AdminService adminService;
 
@@ -29,17 +29,24 @@ public class AdminController {
 
 	@PostMapping("/register")
 	public String register(@Valid UserDto userDto, BindingResult result, HttpSession session) {
- 		return adminService.register(userDto, result, session);
- 	}
- 
- 	@GetMapping("/otp")
- 	public String loadOtp() {
- 		return "admin-otp.html";
-	
+		return adminService.register(userDto, result, session);
 	}
- 	@PostMapping("/otp")
- 	public String submitOtp(@RequestParam("otp") int otp, HttpSession session) {
- 		return adminService.sumbitOtp(otp,session);
- 	}
+
+	@GetMapping("/otp")
+	public String loadOtp() {
+		return "admin-otp.html";
+
+	}
+
+	@PostMapping("/otp")
+	public String submitOtp(@RequestParam("otp") int otp, HttpSession session) {
+		return adminService.sumbitOtp(otp, session);
+	}
+
+	@GetMapping("/home")
+	public String loadHome() {
+		return "admin-home.html";
+
+	}
 
 }
