@@ -29,8 +29,8 @@ public class CustomerController {
 
 	@PostMapping("/register")
 	public String register(@Valid UserDto userDto, BindingResult result, HttpSession session) {
-		return customerService.register(userDto, result, session);
-	}
+ 		return customerService.register(userDto, result, session);
+ 	}
 
 	@GetMapping("/otp")
 	public String loadOtp() {
@@ -43,8 +43,8 @@ public class CustomerController {
 	}
 
 	@GetMapping("/home")
-	public String loadHome() {
-		return "customer-home.html";
+	public String loadHome(HttpSession session) {
+ 		return customerService.loadHome(session);
 	}
 
 }

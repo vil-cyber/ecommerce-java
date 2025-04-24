@@ -44,8 +44,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/home")
-	public String loadHome() {
-		return "admin-home.html";
+	public String loadHome(HttpSession session) {
+ 		return adminService.loadHome(session);
 
 	}
 

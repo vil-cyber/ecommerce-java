@@ -13,6 +13,8 @@ public interface CustomerService {
 	String register(UserDto userDto, BindingResult result, HttpSession session);
 	 
  	String sumbitOtp(int otp, HttpSession session);
+ 	String loadHome(HttpSession session);
+ 	 
  
 
 

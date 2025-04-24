@@ -25,6 +25,10 @@ package com.jsp.ecommerce.service;
  
  	@Override
  	public String login(String email, String password, HttpSession session) {
+ 		session.removeAttribute("admin");
+ 		session.removeAttribute("merchant");
+ 		session.removeAttribute("customer");
+ 
  		Admin admin = adminRepository.findByEmail(email);
  		Customer customer = customerRepository.findByEmail(email);
  		Merchant merchant = merchantRepository.findByEmail(email);
@@ -35,6 +39,7 @@ package com.jsp.ecommerce.service;
  		}
  		if (admin != null) {
  			if (AES.decrypt(admin.getPassword()).equals(password)) {
+ 				session.setAttribute("admin", admin);
  				session.setAttribute("pass", "Login Success");
  				return "redirect:/admin/home";
  			} else {
@@ -44,6 +49,7 @@ package com.jsp.ecommerce.service;
  		}
  		if (merchant != null) {
  			if (AES.decrypt(merchant.getPassword()).equals(password)) {
+ 				session.setAttribute("merchant", merchant);
  				session.setAttribute("pass", "Login Success");
  				return "redirect:/merchant/home";
  			} else {
@@ -53,6 +59,7 @@ package com.jsp.ecommerce.service;
  		}
  		if (customer != null) {
  			if (AES.decrypt(customer.getPassword()).equals(password)) {
+ 				session.setAttribute("customer", customer);
  				session.setAttribute("pass", "Login Success");
  				return "redirect:/customer/home";
  			} else {
@@ -62,6 +69,14 @@ package com.jsp.ecommerce.service;
  		}
  		return "redirect:/login";
  
+ 	}
+ 	@Override
+ 	public String logout(HttpSession session) {
+ 		session.removeAttribute("admin");
+ 		session.removeAttribute("merchant");
+ 		session.removeAttribute("customer");
+ 		session.setAttribute("pass", "Logout Success");
+ 		return "redirect:/";
  	}
  
  }

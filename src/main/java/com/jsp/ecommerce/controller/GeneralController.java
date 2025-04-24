@@ -10,7 +10,7 @@ package com.jsp.ecommerce.controller;
 	 import com.jsp.ecommerce.service.GeneralService;
 	 
 	 import jakarta.servlet.http.HttpSession;
-	 
+
 	 @Controller
 	 public class GeneralController {
 	 
@@ -26,6 +26,10 @@ package com.jsp.ecommerce.controller;
 	 	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
 	 			HttpSession session) {
 	 		return generalService.login(email, password, session);
+	 	}
+	 	@GetMapping("/logout")
+	 	public String logout(HttpSession session) {
+	 		return generalService.logout(session);
 	 	}
 	 }
 

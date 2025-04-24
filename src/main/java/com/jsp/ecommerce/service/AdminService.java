@@ -13,5 +13,6 @@ public interface AdminService {
 
 	String sumbitOtp(int otp, HttpSession session);
 	String register(UserDto userDto, BindingResult result, HttpSession session);
+	String loadHome(HttpSession session);
 
 }

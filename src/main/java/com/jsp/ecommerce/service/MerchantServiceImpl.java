@@ -76,4 +76,14 @@ public class MerchantServiceImpl implements MerchantService {
  			return "redirect:/merchant/otp";
  		}
  	}
+	@Override
+ 	public String loadHome(HttpSession session) {
+ 		Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 		if (merchant != null)
+ 			return "merchant-home.html";
+ 		else {
+ 			session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 			return "redirect:/login";
+ 		}
+ 	}
 }

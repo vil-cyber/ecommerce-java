@@ -72,4 +72,14 @@ public class AdminServiceImpl implements AdminService {
  			return "redirect:/admin/otp";
  		}
 	}
+	@Override
+ 	public String loadHome(HttpSession session) {
+ 		Admin admin = (Admin) session.getAttribute("admin");
+ 		if (admin != null)
+ 			return "admin-home.html";
+ 		else {
+ 			session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 			return "redirect:/login";
+ 		}
+ 	}
 }
