@@ -108,6 +108,16 @@ public class Product {
 	private String imageUrl;
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	@Column(nullable = false)
+ 	private Integer stock;
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
 	@UpdateTimestamp
 	private LocalDateTime createdTime;
 

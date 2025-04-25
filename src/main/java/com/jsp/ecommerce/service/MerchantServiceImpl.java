@@ -9,25 +9,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import com.jsp.ecommerce.dto.ProductDto;
+import com.jsp.ecommerce.dto.Status;
 import com.jsp.ecommerce.dto.UserDto;
 import com.jsp.ecommerce.entity.Merchant;
+import com.jsp.ecommerce.entity.Product;
 import com.jsp.ecommerce.helper.AES;
+import com.jsp.ecommerce.helper.CloudinaryHelper;
 import com.jsp.ecommerce.helper.EmailSender;
 import com.jsp.ecommerce.repository.AdminRepository;
 import com.jsp.ecommerce.repository.CustomerRepository;
 import com.jsp.ecommerce.repository.MerchantRepository;
+import com.jsp.ecommerce.repository.ProductRepository;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Service
 public class MerchantServiceImpl implements MerchantService {
 	@Autowired
-	AdminRepository adminRepository;
-	@Autowired
-	CustomerRepository customerRepository;
-	@Autowired
-	MerchantRepository merchantRepository;
-	@Autowired
+ 	AdminRepository adminRepository;
+ 	@Autowired
+ 	CustomerRepository customerRepository;
+ 	@Autowired
+ 	MerchantRepository merchantRepository;
+ 	@Autowired
+ 	ProductRepository productRepository;
+ 	@Autowired
+ 	CloudinaryHelper cloudinaryHelper;
+ 	@Autowired
  	EmailSender emailSender;
 
 	@Override
@@ -86,4 +96,45 @@ public class MerchantServiceImpl implements MerchantService {
  			return "redirect:/login";
  		}
  	}
+	@Override
+ 	public String loadAddProduct(ProductDto productDto, Model model, HttpSession session) {
+ 		Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 		if (merchant != null) {
+ 			model.addAttribute("productDto", productDto);
+ 			return "add-product.html";
+ 		} else {
+ 			session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 			return "redirect:/login";
+ 		}
+ 	}
+ 
+ 	@Override
+ 	public String addProduct(@Valid ProductDto productDto, BindingResult result, HttpSession session) {
+ 		Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 		if (merchant != null) {
+ 			if(productDto.getImage().isEmpty())
+ 				result.rejectValue("image","error.image","* Select One Image");
+ 			if (result.hasErrors())
+ 				return "add-product.html";
+ 			else {
+ 				Product product=new Product();
+ 				product.setName(productDto.getName());
+ 				product.setDescription(productDto.getDescription());
+ 				product.setCategory(productDto.getCategory());
+ 				product.setStock(productDto.getStock());
+ 				product.setPrice(productDto.getPrice());
+ 				product.setImageUrl(cloudinaryHelper.saveImage(productDto.getImage()));
+ 				product.setMerchant(merchant);
+ 				product.setStatus(Status.PENDING);
+ 				
+ 				productRepository.save(product);
+ 				session.setAttribute("pass", "Product Added Success");
+ 				return "redirect:/merchant/home";
+ 			}
+ 		} else {
+ 			session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 			return "redirect:/login";
+ 		}
+ 	}
+ 
 }
