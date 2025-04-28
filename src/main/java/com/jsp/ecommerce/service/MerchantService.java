@@ -21,5 +21,7 @@ public interface MerchantService {
 	String loadAddProduct(ProductDto productDto, Model model, HttpSession session);
 
 	String addProduct(@Valid ProductDto productDto, BindingResult result, HttpSession session);
+
+	String manageProducts(HttpSession session, Model model);
 	
 }

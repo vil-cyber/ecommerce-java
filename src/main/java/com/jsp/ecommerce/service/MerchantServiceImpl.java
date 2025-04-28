@@ -1,5 +1,6 @@
 package com.jsp.ecommerce.service;
 
+import java.util.List;
 import java.util.Random;
 
 import java.util.Random;
@@ -112,12 +113,12 @@ public class MerchantServiceImpl implements MerchantService {
  	public String addProduct(@Valid ProductDto productDto, BindingResult result, HttpSession session) {
  		Merchant merchant = (Merchant) session.getAttribute("merchant");
  		if (merchant != null) {
- 			if(productDto.getImage().isEmpty())
- 				result.rejectValue("image","error.image","* Select One Image");
+ 			if (productDto.getImage().isEmpty())
+ 				result.rejectValue("image", "error.image", "* Select One Image");
  			if (result.hasErrors())
  				return "add-product.html";
  			else {
- 				Product product=new Product();
+ 				Product product = new Product();
  				product.setName(productDto.getName());
  				product.setDescription(productDto.getDescription());
  				product.setCategory(productDto.getCategory());
@@ -135,6 +136,24 @@ public class MerchantServiceImpl implements MerchantService {
  			session.setAttribute("fail", "Invalid Session, First Login to Access");
  			return "redirect:/login";
  		}
+ 	}
+ 		@Override
+ 	 	public String manageProducts(HttpSession session, Model model) {
+ 	 		Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 	 		if (merchant != null) {
+ 	 			List<Product> products = productRepository.findByMerchant_id(merchant.getId());
+ 	 			if (products.isEmpty()) {
+ 	 				session.setAttribute("fail", "No Products Added Yet");
+ 	 				return "redirect:/merchant/home";
+ 	 			} else {
+ 	 				model.addAttribute("products", products);
+ 	 				return "manage-products.html";
+ 	 			}
+ 	 		} else {
+ 	 			session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 	 			return "redirect:/login";
+ 	 		}
+ 	 	
  	}
  
 }

@@ -1,20 +1,625 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div class="message">
-      <h2 style="color: green" th:text="${session.pass}"></h2>
-      <h2 style="color: red" th:text="${session.fail}"></h2>
-      <th:block th:text="${@messageRemover.remove()}"></th:block>
+    <title>Admin Dashboard | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3a0ca3;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --dark: #14213d;
+            --light: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.2);
+            --transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #14213d 100%);
+            min-height: 100vh;
+            color: var(--light);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        .particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -2;
+        }
+
+        .neon-circle {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(58,12,163,0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(30px);
+            z-index: -1;
+            animation: float 12s infinite ease-in-out alternate;
+        }
+
+        .neon-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(247,37,133,0.15) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: 2s;
+            right: 10%;
+            top: 30%;
+        }
+
+        .neon-circle:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(76,201,240,0.15) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: 4s;
+            left: 15%;
+            bottom: 20%;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .message {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            animation: neonMessage 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+                       fadeOut 0.5s 4s forwards;
+            transform-origin: top right;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.3);
+            border: 1px solid rgba(247, 37, 133, 0.2);
+        }
+
+        @keyframes neonMessage {
+            0% { transform: translateX(100%) rotate(15deg); opacity: 0; }
+            80% { transform: translateX(-10px) rotate(-5deg); opacity: 1; }
+            100% { transform: translateX(0) rotate(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin: 3rem 0 5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #f72585, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(247, 37, 133, 0.3);
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(247, 37, 133, 0.3); }
+            to { text-shadow: 0 0 20px rgba(247, 37, 133, 0.6), 
+                            0 0 30px rgba(76, 201, 240, 0.4); }
+        }
+
+        .dashboard-header::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, #f72585, #4cc9f0);
+            margin: 0 auto;
+            border-radius: 2px;
+            animation: linePulse 3s infinite;
+        }
+
+        @keyframes linePulse {
+            0% { width: 150px; opacity: 0.8; }
+            50% { width: 250px; opacity: 1; }
+            100% { width: 150px; opacity: 0.8; }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .dashboard-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            z-index: 1;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                        rgba(58,12,163,0.3) 0%, 
+                        rgba(114,9,183,0.2) 50%, 
+                        rgba(247,37,133,0.1) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 
+                        0 0 20px rgba(247, 37, 133, 0.2);
+            border: 1px solid rgba(247, 37, 133, 0.3);
+        }
+
+        .dashboard-card:hover::before {
+            opacity: 1;
+            animation: gradientShift 6s infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #f72585, #4cc9f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 5px rgba(247, 37, 133, 0.5));
+            animation: iconFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) scale(1.2) rotate(10deg); }
+            50% { transform: translateY(-15px) scale(1.2) rotate(10deg); }
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f72585, #4cc9f0);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover .card-title::after {
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #f72585, #3a0ca3);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 1.5rem;
+            z-index: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.4);
+            background: linear-gradient(135deg, #f72585, #7209b7);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3a0ca3, #f72585);
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+            animation: gradientPulse 2s infinite;
+        }
+
+        @keyframes gradientPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #f72585, #d00000);
+            display: block;
+            width: fit-content;
+            margin: 3rem auto 0;
+            padding: 0.8rem 3rem;
+            animation: pulseWarning 2s infinite;
+        }
+
+        .btn-logout:hover {
+            background: linear-gradient(135deg, #d00000, #f72585);
+            animation: pulseWarningFast 1s infinite;
+        }
+
+        @keyframes pulseWarning {
+            0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(247, 37, 133, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
+        }
+
+        @keyframes pulseWarningFast {
+            0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(247, 37, 133, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
+        }
+
+        /* Floating particles */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(247, 37, 133, 0.5);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: floatParticle 15s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            50% { transform: translateY(-100px) translateX(50px) rotate(180deg); }
+            100% { transform: translateY(0) translateX(0) rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-js" id="particles-js"></div>
+    <div class="neon-circle"></div>
+    <div class="neon-circle"></div>
+    <div class="neon-circle"></div>
+    <div class="floating-particles" id="floatingParticles"></div>
+
+    <div class="container">
+        <div class="message">
+            <h2 style="color: #4cc9f0" th:text="${session.pass}"></h2>
+            <h2 style="color: #f72585" th:text="${session.fail}"></h2>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+
+        <header class="dashboard-header" data-aos="fade-down" data-aos-duration="800">
+            <h1>Admin Control Center</h1>
+            <p>Manage your platform with powerful tools</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="navigateTo('')" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="card-title">Approve Products</h3>
+                <p>Review and approve new product submissions</p>
+                <button class="btn">Access Panel</button>
+            </div>
+
+            <div class="dashboard-card" onclick="navigateTo('')" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3 class="card-title">Manage Orders</h3>
+                <p>Process and track customer orders</p>
+                <button class="btn">View Orders</button>
+            </div>
+
+            <div class="dashboard-card" onclick="navigateTo('')" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="card-title">View Overview</h3>
+                <p>Analytics and platform statistics</p>
+                <button class="btn">View Dashboard</button>
+            </div>
+        </div>
+
+        <a href="/logout" class="btn btn-logout" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
     </div>
-    <h1>Admin Home</h1>
-    <a href=""><button>Approve Products</button></a>
-    <a href=""><button>Manage Orders</button></a>
-    <a href=""><button>View Overview</button></a>
-    <a href="/logout"><button>Logout</button></a>
-  </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            once: true,
+            duration: 1000,
+            easing: 'ease-out-back'
+        });
+
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#f72585" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 4, random: true },
+                line_linked: { 
+                    enable: true, 
+                    distance: 150, 
+                    color: "#4cc9f0", 
+                    opacity: 0.3, 
+                    width: 1 
+                },
+                move: {
+                    enable: true,
+                    speed: 3,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: { enable: true, rotateX: 600, rotateY: 1200 }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+
+        // Create floating particles
+        const floatingContainer = document.getElementById('floatingParticles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 2px and 6px
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random animation
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            floatingContainer.appendChild(particle);
+        }
+
+        // Card hover 3D effect
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const x = e.clientX - card.getBoundingClientRect().left;
+                const y = e.clientY - card.getBoundingClientRect().top;
+                
+                const centerX = card.offsetWidth / 2;
+                const centerY = card.offsetHeight / 2;
+                
+                const angleX = (y - centerY) / 15;
+                const angleY = (centerX - x) / 15;
+                
+                card.style.transform = `translateY(-10px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
+                
+                // Parallax effect for icon
+                const icon = card.querySelector('.card-icon');
+                icon.style.transform = `translate(${angleY * 2}px, ${angleX * 2}px) scale(1.2) rotate(10deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-10px) rotateX(0) rotateY(0) scale(1.03)';
+                const icon = card.querySelector('.card-icon');
+                icon.style.transform = 'scale(1.2) rotate(10deg)';
+            });
+        });
+
+        // Button ripple effect
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple-effect');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            });
+        });
+
+        // Navigation function with cool transition
+        function navigateTo(url) {
+            // Create overlay animation
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'linear-gradient(135deg, #f72585, #3a0ca3)';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.5s ease';
+            
+            // Add loading spinner
+            const spinner = document.createElement('div');
+            spinner.style.border = '5px solid rgba(255,255,255,0.3)';
+            spinner.style.borderRadius = '50%';
+            spinner.style.borderTop = '5px solid white';
+            spinner.style.width = '50px';
+            spinner.style.height = '50px';
+            spinner.style.animation = 'spin 1s linear infinite';
+            
+            overlay.appendChild(spinner);
+            document.body.appendChild(overlay);
+            
+            // Add spin animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Animate in
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
+            
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = url;
+            }, 800);
+        }
+
+        // Add ripple effect style
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            .ripple-effect {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.7);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+                width: 100px;
+                height: 100px;
+                margin-left: -50px;
+                margin-top: -50px;
+            }
+            
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
+    </script>
+</body>
 </html>

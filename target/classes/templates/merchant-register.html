@@ -4,14 +4,124 @@
     <meta charset="UTF-8">
     <title>Merchant Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Background and layout */
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Card Animation */
+        .card {
+            border: none;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            animation: slideFadeIn 1s ease forwards;
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        @keyframes slideFadeIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card-header {
+            background: none;
+            border: none;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .card-header h3 {
+            color: #6a11cb;
+            font-weight: 700;
+        }
+
+        /* Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            border-radius: 0.75rem;
+            border: 1px solid #ccc;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25);
+            transform: scale(1.02);
+        }
+
+        .form-check-label {
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        /* Button */
+        .btn-primary {
+            background-color: #6a11cb;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #5311a8;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(83, 17, 168, 0.4);
+        }
+
+        /* Error messages */
+        span[th\\:errors] {
+            color: #e63946;
+            font-size: 0.85rem;
+        }
+
+        /* Animations on form inputs */
+        .mb-3 {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .mb-3:nth-child(1) { animation-delay: 0.2s; }
+        .mb-3:nth-child(2) { animation-delay: 0.4s; }
+        .mb-3:nth-child(3) { animation-delay: 0.6s; }
+        .mb-3:nth-child(4) { animation-delay: 0.8s; }
+        .mb-3:nth-child(5) { animation-delay: 1s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-7 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="text-center">Merchant Registration</h3>
+                        <h3>🚀 Merchant Registration</h3>
                     </div>
                     <div class="card-body">
                         <form action="/merchant/register" method="post" th:object="${userDto}">
@@ -20,28 +130,33 @@
                                 <input type="text" class="form-control" id="name" th:field="*{name}">
                                 <span th:errors="*{name}"></span>
                             </div>
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" th:field="*{email}">
                                 <span th:errors="*{email}"></span>
                             </div>
+
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" th:field="*{password}">
                                 <span th:errors="*{password}"></span>
                             </div>
+
                             <div class="mb-3">
                                 <label for="confirmPassword" class="form-label">Confirm Password</label>
                                 <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}">
                                 <span th:errors="*{confirmPassword}"></span>
                             </div>
+
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="terms" th:field="*{terms}" value="true">
                                 <label class="form-check-label" for="terms">I accept the terms and conditions</label><br>
                                 <span th:errors="*{terms}"></span>
                             </div>
+
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Register</button>
+                                <button type="submit" class="btn btn-primary w-100">Register Now 💜</button>
                             </div>
                         </form>
                     </div>
