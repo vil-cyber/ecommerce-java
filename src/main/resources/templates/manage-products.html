@@ -33,7 +33,10 @@
            <td th:text="${product.price}+'&#8377'"></td>
            <td th:text="${product.stock}"></td>
            <td th:text="${product.category}"></td>
-           <td th:text="${product.status}"></td>
+           <td>
+            <span th:if="${product.status.name().equals('REJECTED')}" th:text="${product.status}+'->'+${product.reason}"></span>
+            <span th:if="${!product.status.name().equals('REJECTED')}" th:text="${product.status}" ></span>
+          </td>
            <td>
             <a th:href="'/merchant/edit/'+${product.id}"><button>Edit</button></a>
             <a th:href="'/merchant/delete/'+${product.id}"><button>Delete</button></a>

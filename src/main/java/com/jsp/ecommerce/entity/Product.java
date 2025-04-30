@@ -120,6 +120,15 @@ public class Product {
 
 	@UpdateTimestamp
 	private LocalDateTime createdTime;
+	private String reason;
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
 
 	@ManyToOne
 	Merchant merchant;
