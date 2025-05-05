@@ -14,7 +14,6 @@ import com.jsp.ecommerce.service.CustomerService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
@@ -47,8 +46,11 @@ public class CustomerController {
  		return customerService.loadHome(session);
 	}
 	@GetMapping("/products")
- 	public String viewProducts(HttpSession session, Model model) {
- 		return customerService.viewProducts(session, model);
+	public String viewProducts(HttpSession session, Model model,
+ 			@RequestParam(name = "category", required = false) String category,
+ 			@RequestParam(name = "sort", required = false) String sort,
+ 			@RequestParam(name = "search", required = false) String search) {
+ 		return customerService.viewProducts(session, model,category,sort,search);
  	}
 
 }

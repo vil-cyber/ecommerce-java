@@ -6,7 +6,6 @@ import org.springframework.validation.BindingResult;
 import com.jsp.ecommerce.dto.UserDto;
 
 import jakarta.servlet.http.HttpSession;
-
 public interface CustomerService {
 
 	String register(UserDto userDto, Model model);
@@ -14,8 +13,8 @@ public interface CustomerService {
 	 
  	String sumbitOtp(int otp, HttpSession session);
  	String loadHome(HttpSession session);
-	String viewProducts(HttpSession session, Model model);
- 	 
+ 	String viewProducts(HttpSession session, Model model, String category, String sort, String search);
+ 	  	 
  
 
 
