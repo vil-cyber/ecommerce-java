@@ -6,12 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+
 public class OrderItem {
 	public Long getId() {
 		return id;
@@ -54,4 +51,13 @@ public class OrderItem {
 	private Orders orders;
 	@ManyToOne
 	private Product product;
+	@ManyToOne
+ 	Cart cart;
+	public Cart getCart() {
+		return cart;
+	}
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+ 
 }
