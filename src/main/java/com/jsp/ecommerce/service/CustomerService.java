@@ -20,6 +20,8 @@ public interface CustomerService {
 	String increaseQuantity(Long id, HttpSession session);
 	String viewCart(HttpSession session, Model model);
 	String decreaseQuantity(Long id, HttpSession session);
+	String proceedPayment(HttpSession session, Model model);
+	String confirmPament(Long id, String paymentId, HttpSession session);
 
 
 }

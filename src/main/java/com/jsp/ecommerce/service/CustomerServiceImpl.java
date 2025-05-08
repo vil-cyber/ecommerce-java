@@ -4,31 +4,37 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import com.jsp.ecommerce.controller.AdminController;
+import com.jsp.ecommerce.dto.OrderStatus;
+import com.jsp.ecommerce.dto.PaymentStatus;
 import com.jsp.ecommerce.dto.Status;
 import com.jsp.ecommerce.dto.UserDto;
 import com.jsp.ecommerce.entity.Cart;
 import com.jsp.ecommerce.entity.Customer;
 import com.jsp.ecommerce.entity.OrderItem;
+import com.jsp.ecommerce.entity.Orders;
+import com.jsp.ecommerce.entity.Payment;
 import com.jsp.ecommerce.entity.Product;
 import com.jsp.ecommerce.helper.AES;
 import com.jsp.ecommerce.helper.EmailSender;
+import com.jsp.ecommerce.helper.RazorPayHelper;
 import com.jsp.ecommerce.repository.AdminRepository;
 import com.jsp.ecommerce.repository.CartRepository;
 import com.jsp.ecommerce.repository.CustomerRepository;
 import com.jsp.ecommerce.repository.MerchantRepository;
 import com.jsp.ecommerce.repository.OrderItemRepository;
+import com.jsp.ecommerce.repository.OrderRepository;
+import com.jsp.ecommerce.repository.PaymentRepsoitory;
 import com.jsp.ecommerce.repository.ProductRepository;
 
 import jakarta.servlet.http.HttpSession;
-
 @Service
 public class CustomerServiceImpl implements CustomerService {
-
 	private final AdminController adminController;
 
 	private final EmailSender emailSender;
@@ -44,6 +50,15 @@ public class CustomerServiceImpl implements CustomerService {
 	CartRepository cartRepository;
 	@Autowired
 	OrderItemRepository itemRepository;
+	
+	@Autowired
+	RazorPayHelper payHelper;
+	@Value("${razor-pay.api.key}")
+	String key;
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	PaymentRepsoitory paymentRepository;
 
 	CustomerServiceImpl(EmailSender emailSender, AdminController adminController) {
 		this.emailSender = emailSender;
@@ -168,7 +183,7 @@ public class CustomerServiceImpl implements CustomerService {
 				List<OrderItem> items = itemRepository.findByCart(cart);
 				if (items.isEmpty()) {
 					OrderItem item = new OrderItem();
-					item.setQuantity(1L);
+					item.setQuantity(1);
 					item.setPrice(product.getPrice());
 					item.setProduct(product);
 					item.setCart(cart);
@@ -195,7 +210,7 @@ public class CustomerServiceImpl implements CustomerService {
 					if (flag) {
 
 						OrderItem item = new OrderItem();
-						item.setQuantity(1L);
+						item.setQuantity(1);
 						item.setPrice(product.getPrice());
 						item.setProduct(product);
 						item.setCart(cart);
@@ -278,5 +293,79 @@ public class CustomerServiceImpl implements CustomerService {
 			return "redirect:/login";
 		}
 
+	}
+	@Override
+	public String proceedPayment(HttpSession session, Model model) {
+		Customer customer = (Customer) session.getAttribute("customer");
+		if (customer != null) {
+			Cart cart = cartRepository.findByCustomer(customer);
+			if (cart == null) {
+				session.setAttribute("fail", "No Items in Cart");
+				return "redirect:/customer/home";
+			} else {
+				List<OrderItem> items = itemRepository.findByCart(cart);
+				if (items.isEmpty()) {
+					session.setAttribute("fail", "No Items in Cart");
+					return "redirect:/customer/home";
+				} else {
+					double amount = items.stream().mapToDouble(x -> x.getPrice() * x.getQuantity()).sum();
+					String orderId = payHelper.createPayment(amount);
+
+					Orders order = new Orders();
+					order.setCustomer(customer);
+					order.setOrderStatus(OrderStatus.PLACED);
+					order.setPaymentStatus(PaymentStatus.PENDING);
+					order.setTotalAmount(amount);
+					orderRepository.save(order);
+
+					model.addAttribute("key", key);
+					model.addAttribute("amount", amount * 100);
+					model.addAttribute("orderId", orderId);
+					model.addAttribute("url", "/customer/payment/" + order.getId());
+
+					return "payment.html";
+				}
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, First Login to Access");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String confirmPament(Long id, String paymentId, HttpSession session) {
+		Customer customer = (Customer) session.getAttribute("customer");
+		if (customer != null) {
+			Orders order = orderRepository.findById(id).orElseThrow();
+			if (paymentId != null)
+				order.setPaymentStatus(PaymentStatus.PAID);
+			else
+				order.setPaymentStatus(PaymentStatus.FAILED);
+
+			orderRepository.save(order);
+			Payment payment = new Payment();
+			payment.setAmount(order.getTotalAmount());
+			payment.setOrders(order);
+			payment.setPaymentId(paymentId);
+			payment.setStatus(PaymentStatus.PAID);
+			paymentRepository.save(payment);
+
+			Cart cart = cartRepository.findByCustomer(customer);
+			List<OrderItem> items = itemRepository.findByCart(cart);
+			for (OrderItem item : items) {
+				item.setCart(null);
+				item.setOrders(order);
+				itemRepository.save(item);
+				Product product = item.getProduct();
+				product.setStock(product.getStock() - item.getQuantity());
+				productRepository.save(product);
+			}
+
+			session.setAttribute("pass", "Payment Success and Order Placed");
+			return "redirect:/customer/home";
+		} else {
+			session.setAttribute("fail", "Invalid Session, First Login to Access");
+			return "redirect:/login";
+		}
 	}
 }

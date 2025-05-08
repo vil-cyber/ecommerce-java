@@ -16,10 +16,10 @@ public class OrderItem {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getQuantity() {
+	public Integer  getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(Long quantity) {
+	public void setQuantity(Integer  quantity) {
 		this.quantity = quantity;
 	}
 	public Double getPrice() {
@@ -44,7 +44,7 @@ public class OrderItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private Long quantity;
+	private Integer  quantity;
 	@Column(nullable = false)
 	private Double price;
 	@ManyToOne
