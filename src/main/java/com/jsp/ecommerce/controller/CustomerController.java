@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,8 +78,20 @@ public class CustomerController {
 		return customerService.proceedPayment(session, model);
 	}
 	@PostMapping("/payment/{id}")
-	public String confirmPayment(@PathVariable("id") Long id, @RequestParam("razorpay_payment_id") String paymentId,HttpSession session) {
-		return customerService.confirmPament(id,paymentId,session);
+	public String confirmPayment(@PathVariable("id") Long id, @RequestParam("razorpay_payment_id") String paymentId,
+			HttpSession session) {
+		return customerService.confirmPament(id, paymentId, session);
+	}
+
+	@GetMapping("/manage-profile")
+	public String manageProfile(HttpSession session, Model model) {
+		return customerService.manageProfile(session, model);
+	}
+
+	@PostMapping("/manage-profile")
+	public String manageProfile(HttpSession session, @ModelAttribute UserDto dto, @RequestParam("address") String address,
+			@RequestParam("mobile") Long mobile) {
+		return customerService.manageProfile(session, dto, mobile, address);
 	}
 
 }

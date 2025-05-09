@@ -15,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -71,7 +72,8 @@ public class Orders {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "orderId")
+	@SequenceGenerator(initialValue = 101001,allocationSize = 1,name = "orderId")
 	private Long id;
 	@Column(nullable = false)
 	private Double totalAmount;
@@ -83,6 +85,28 @@ public class Orders {
 	private OrderStatus orderStatus;
 	@CreationTimestamp
 	private LocalDateTime creationTime;
+	
+	@Column(nullable = false)
+	private Long mobile;
+	@Column(nullable = false)
+	private String address;
+	
+
+	public Long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	@ManyToOne
 	private Customer customer;

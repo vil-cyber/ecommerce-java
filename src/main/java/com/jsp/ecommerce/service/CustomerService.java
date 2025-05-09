@@ -22,6 +22,10 @@ public interface CustomerService {
 	String decreaseQuantity(Long id, HttpSession session);
 	String proceedPayment(HttpSession session, Model model);
 	String confirmPament(Long id, String paymentId, HttpSession session);
+	String manageProfile(HttpSession session, Model model);
+	String manageProfile(HttpSession session, UserDto dto, Long mobile, String address);
+
+
 
 
 }
