@@ -225,6 +225,32 @@ public class MerchantServiceImpl implements MerchantService {
  	 			return "redirect:/login";
  	 		}
  	 	}
- 	 
+ 	 	@Override
+ 		public String manageProfile(HttpSession session, Model model) {
+ 			Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 			if (merchant != null) {
+ 				model.addAttribute("name", merchant.getName());
+ 				return "merchant-manage-profile";
+ 			} else {
+ 				session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 				return "redirect:/login";
+ 			}
+ 		}
+
+ 		@Override
+ 		public String manageProfile(HttpSession session, UserDto dto) {
+ 			Merchant merchant = (Merchant) session.getAttribute("merchant");
+ 			if (merchant != null) {
+ 					merchant.setName(dto.getName());
+ 					if(dto.getPassword().length()>0)
+ 					merchant.setPassword(AES.encrypt(dto.getPassword()));
+ 					merchantRepository.save(merchant);
+ 					session.setAttribute("pass", "Profile Updated Success");
+ 					return "redirect:/merchant/home";
+ 			} else {
+ 				session.setAttribute("fail", "Invalid Session, First Login to Access");
+ 				return "redirect:/login";
+ 			}
+ 		}
  
 }

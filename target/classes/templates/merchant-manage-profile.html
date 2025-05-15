@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Merchant Dashboard - ShopEase</title>
+    <title>Manage Profile - ShopEase</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -174,7 +174,7 @@
         }
       }
 
-      .dashboard-header {
+      .profile-header {
         background: var(--merchant-gradient);
         color: white;
         padding: 6rem 5%;
@@ -183,7 +183,7 @@
         overflow: hidden;
       }
 
-      .dashboard-header::before {
+      .profile-header::before {
         content: "";
         position: absolute;
         top: 0;
@@ -195,21 +195,21 @@
         background-position: center;
       }
 
-      .dashboard-content {
+      .profile-content {
         max-width: 800px;
         margin: 0 auto;
         position: relative;
         z-index: 1;
       }
 
-      .dashboard-header h1 {
-        font-size: 3.5rem;
+      .profile-header h1 {
+        font-size: 3rem;
         margin-bottom: 1.5rem;
         font-weight: 700;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
-      .dashboard-header p {
+      .profile-header p {
         font-size: 1.2rem;
         max-width: 700px;
         margin: 0 auto;
@@ -217,122 +217,86 @@
         line-height: 1.6;
       }
 
-      .features {
-        padding: 6rem 5%;
+      .profile-form-container {
+        max-width: 600px;
+        margin: -50px auto 50px;
         background-color: white;
-        text-align: center;
-      }
-
-      .section-title {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: var(--dark);
-        font-weight: 700;
-        position: relative;
-        display: inline-block;
-      }
-
-      .section-title::after {
-        content: "";
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(
-          90deg,
-          var(--primary) 0%,
-          var(--secondary) 100%
-        );
-        border-radius: 2px;
-      }
-
-      .section-subtitle {
-        color: var(--gray);
-        max-width: 700px;
-        margin: 2rem auto 3rem;
-        font-size: 1.1rem;
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .feature-card {
-        background-color: white;
-        padding: 2.5rem 2rem;
         border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        transition: var(--transition);
-        border: 1px solid #f3f4f6;
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+        position: relative;
+        z-index: 10;
       }
 
-      .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
-        border-color: #e5e7eb;
-      }
-
-      .feature-icon {
-        font-size: 3rem;
+      .form-group {
         margin-bottom: 1.5rem;
-        display: inline-block;
-        position: relative;
       }
 
-      .feature-icon i {
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--secondary) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
-        z-index: 1;
-      }
-
-      .feature-icon::after {
-        content: "";
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        background-color: #eef2ff;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 0;
-      }
-
-      .feature-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
         color: var(--dark);
       }
 
-      .feature-card p {
-        color: var(--gray);
-        line-height: 1.6;
-      }
-
-      .feature-link {
-        display: inline-block;
-        margin-top: 20px;
-        color: var(--primary);
-        font-weight: 600;
-        text-decoration: none;
+      .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
         transition: var(--transition);
       }
 
-      .feature-link:hover {
-        color: var(--primary-dark);
-        transform: translateX(5px);
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        outline: none;
+      }
+
+      .form-hint {
+        font-size: 0.85rem;
+        color: var(--gray);
+        margin-top: 0.5rem;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
       }
 
       .footer {
@@ -470,7 +434,8 @@
       }
 
       button:focus,
-      a:focus {
+      a:focus,
+      input:focus {
         outline: 2px solid var(--primary);
         outline-offset: 2px;
       }
@@ -504,29 +469,34 @@
         .nav-buttons {
           display: none;
         }
-        .dashboard-header h1 {
+        .profile-header h1 {
           font-size: 2.5rem;
         }
-        .section-title {
-          font-size: 2rem;
-        }
-        .dashboard-header {
+        .profile-header {
           padding: 4rem 5%;
+        }
+        .profile-form-container {
+          margin: -30px 20px 30px;
+          padding: 1.5rem;
+        }
+        .form-actions {
+          flex-direction: column;
+          gap: 15px;
+        }
+        .form-actions .btn {
+          width: 100%;
         }
       }
 
       @media (max-width: 576px) {
-        .dashboard-header h1 {
+        .profile-header h1 {
           font-size: 2rem;
         }
-        .dashboard-header p {
+        .profile-header p {
           font-size: 1rem;
         }
         .alert {
           min-width: 90%;
-        }
-        .section-title::after {
-          width: 60px;
         }
       }
     </style>
@@ -552,11 +522,11 @@
 
       <div class="nav-buttons">
         <a
-          href="/merchant/profile"
+          href="/merchant/home"
           class="nav-btn logout-btn"
           style="margin-right: 10px"
         >
-          <i class="fas fa-user"></i> My Profile
+          <i class="fas fa-home"></i> Dashboard
         </a>
         <a href="/logout" class="nav-btn logout-btn">
           <i class="fas fa-sign-out-alt"></i> Logout
@@ -567,8 +537,8 @@
     <!-- Mobile menu (hidden by default) -->
     <div class="mobile-menu">
       <div class="nav-buttons">
-        <a href="/merchant/profile" class="nav-btn logout-btn">
-          <i class="fas fa-user"></i> My Profile
+        <a href="/merchant/home" class="nav-btn logout-btn">
+          <i class="fas fa-home"></i> Dashboard
         </a>
         <a href="/logout" class="nav-btn logout-btn">
           <i class="fas fa-sign-out-alt"></i> Logout
@@ -590,63 +560,50 @@
     <th:block th:text="${@messageRemover.remove()}"></th:block>
 
     <main id="main-content">
-      <section class="dashboard-header">
-        <div class="dashboard-content">
-          <h1>Merchant Dashboard</h1>
-          <p>
-            Manage your products, track orders, and grow your business with
-            ShopEase's merchant tools.
-          </p>
+      <section class="profile-header">
+        <div class="profile-content">
+          <h1>Manage Your Profile</h1>
+          <p>Update your merchant account information and credentials</p>
         </div>
       </section>
 
-      <section class="features">
-        <h2 class="section-title">Merchant Actions</h2>
-        <p class="section-subtitle">
-          Access all the tools you need to manage your store and products
-        </p>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-user-edit"></i>
-            </div>
-            <h3>Manage Profile</h3>
-            <p>
-              Update your merchant profile information, business details, and
-              contact information to keep your customers informed.
-            </p>
-            <a href="/merchant/profile" class="feature-link">
-              Go to Profile <i class="fas fa-arrow-right"></i>
-            </a>
+      <div class="profile-form-container">
+        <form action="/merchant/manage-profile" method="post">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              th:value="${name}"
+              class="form-control"
+              required
+            />
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-plus-circle"></i>
-            </div>
-            <h3>Add Product</h3>
-            <p>
-              List a new product for sale on the platform with detailed
-              descriptions, images, pricing, and inventory information.
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+            />
+            <p class="form-hint">
+              Leave blank if you don't want to update your password
             </p>
-            <a href="/merchant/add-product" class="feature-link">
-              Add New Product <i class="fas fa-arrow-right"></i>
-            </a>
           </div>
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-boxes"></i>
-            </div>
-            <h3>Manage Products</h3>
-            <p>
-              View, edit, and update your existing product listings, manage
-              inventory levels, and track product performance.
-            </p>
-            <a href="/merchant/manage-products" class="feature-link">
-              View Products <i class="fas fa-arrow-right"></i>
+
+          <div class="form-actions">
+            <a href="/merchant/home" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Profile
+            </button>
           </div>
-        </div>
-      </section>
+        </form>
+      </div>
     </main>
 
     <!-- Footer -->
@@ -723,34 +680,18 @@
           }
         });
 
-        // Add animation to feature cards when they come into view
-        const observeElements = (elements, className) => {
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add(className);
-                }
-              });
-            },
-            {
-              threshold: 0.1,
-            }
-          );
-          elements.forEach((element) => {
-            observer.observe(element);
-          });
-        };
+        // Form animation
+        const formContainer = document.querySelector(".profile-form-container");
+        if (formContainer) {
+          formContainer.style.opacity = "0";
+          formContainer.style.transform = "translateY(20px)";
+          formContainer.style.transition =
+            "opacity 0.5s ease, transform 0.5s ease";
 
-        // Apply animations
-        const featureCards = document.querySelectorAll(".feature-card");
-
-        if ("IntersectionObserver" in window) {
-          featureCards.forEach((card) => {
-            card.style.opacity = "0";
-          });
-
-          observeElements(featureCards, "animate-fadeInUp");
+          setTimeout(() => {
+            formContainer.style.opacity = "1";
+            formContainer.style.transform = "translateY(0)";
+          }, 300);
         }
       });
     </script>

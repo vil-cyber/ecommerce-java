@@ -9,6 +9,7 @@ import com.jsp.ecommerce.entity.OrderItem;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long>{
 	List<OrderItem> findByCart(Cart cart);
+	List<OrderItem> findByOrdersId(Long orderId);
 
 
 }

@@ -1,6 +1,6 @@
 package com.jsp.ecommerce.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import com.jsp.ecommerce.dto.UserDto;
 import com.jsp.ecommerce.service.CustomerService;
@@ -92,6 +94,20 @@ public class CustomerController {
 	public String manageProfile(HttpSession session, @ModelAttribute UserDto dto, @RequestParam("address") String address,
 			@RequestParam("mobile") Long mobile) {
 		return customerService.manageProfile(session, dto, mobile, address);
+	}
+	@GetMapping("/order-history")
+	public String orderHistory(HttpSession session, Model model) {
+		return customerService.orderHistory(session, model);
+	}
+
+	@GetMapping("/track-orders")
+	public String trackOrders(HttpSession session) {
+		return customerService.loadTrackOrder(session);
+	}
+
+	@PostMapping("/track-orders")
+	public String trackOrders(@RequestParam Long orderId, HttpSession session, Model model) {
+		return customerService.trackOrders(orderId, session, model);
 	}
 
 }

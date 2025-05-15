@@ -1,6 +1,9 @@
 package com.jsp.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,5 +78,13 @@ public class MerchantController {
  	public String deleteProduct(@PathVariable("id") Long id, HttpSession session) {
  		return merchantService.deleteById(id, session);
  	}
+ 	@GetMapping("/profile")
+	public String manageProfile(HttpSession session, Model model) {
+		return merchantService.manageProfile(session, model);
+	}
 
+	@PostMapping("/manage-profile")
+	public String manageProfile(HttpSession session, @ModelAttribute UserDto dto) {
+		return merchantService.manageProfile(session, dto);
+	}
 }

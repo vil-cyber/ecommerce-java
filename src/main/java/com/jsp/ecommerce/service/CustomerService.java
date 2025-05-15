@@ -24,6 +24,12 @@ public interface CustomerService {
 	String confirmPament(Long id, String paymentId, HttpSession session);
 	String manageProfile(HttpSession session, Model model);
 	String manageProfile(HttpSession session, UserDto dto, Long mobile, String address);
+	
+	  String orderHistory(HttpSession session, Model model);
+
+	    String loadTrackOrder(HttpSession session);
+
+	    String trackOrders(Long orderId, HttpSession session, Model model);
 
 
 

@@ -28,6 +28,9 @@ public interface MerchantService {
  	String updateProduct(Long id, @Valid ProductDto productDto, BindingResult result,Model model, HttpSession session);
  
  	String deleteById(Long id, HttpSession session);
+ 	  String manageProfile(HttpSession session, Model model);
+
+ 	    String manageProfile(HttpSession session, UserDto dto);
  
 	
 }

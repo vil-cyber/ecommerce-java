@@ -22,4 +22,11 @@ public interface AdminService {
 
 	String rejectProduct(Long id, String reason, HttpSession session);
 
+	
+	String loadOrders(HttpSession session, Model model);
+
+    String updateStatus(Long orderId, String status, HttpSession session);
+
+    String loadOverView(HttpSession session,Model model);
+
 }

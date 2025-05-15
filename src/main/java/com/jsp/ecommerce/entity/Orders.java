@@ -17,8 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
 
+
+import lombok.Setter;
 @Entity
 @Getter
 @Setter
