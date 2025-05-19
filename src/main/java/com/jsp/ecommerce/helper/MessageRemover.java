@@ -14,7 +14,10 @@ public class MessageRemover {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
 		ServletRequestAttributes attributes = (ServletRequestAttributes) requestAttributes;
 		HttpServletRequest request = attributes.getRequest();
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession(false);
+		if(session == null) {
+			return;
+		}
 
 		session.removeAttribute("pass");
 		session.removeAttribute("fail");
